@@ -1,0 +1,31 @@
+<section class="container" data-page="block-list">
+  <div class="card">
+    <div class="card-body">
+      <div data-selector="channel-disconnected-message" style="display:none;">
+        <div data-selector="reload-button" class="alert alert-danger">
+          <a href="#" class="alert-link"><%= gettext "Connection Lost, click to load newer blocks" %></a>
+        </div>
+      </div>
+
+      <h1><%= gettext "Blocks" %></h1>
+
+      <span data-selector="blocks-list">
+        <%= for block <- @blocks do %>
+          <%= render BlockScoutWeb.BlockView, "_tile.html", block: block %>
+        <% end %>
+      </span>
+
+      <%= if @next_page_params do %>
+        <%= link(
+          gettext("Older"),
+          class: "button button-secondary button-sm float-right mt-3",
+          to: block_path(
+            @conn,
+            :index,
+            @next_page_params
+          )
+        ) %>
+      <% end %>
+    </div>
+  </div>
+</section>
