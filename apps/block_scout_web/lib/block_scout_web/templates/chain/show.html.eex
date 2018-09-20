@@ -1,0 +1,81 @@
+<div class="dashboard-banner-container d-none d-md-block" data-page="chain-details">
+  <div class="container">
+    <div class="dashboard-banner">
+      <div class="dashboard-banner-chart">
+        <canvas data-chart="marketHistoryChart" data-available_supply='<%= @exchange_rate.available_supply %>' data-market_history_data='<%=raw encode_market_history_data(@market_history_data) %>' width="350" height="152"></canvas>
+      </div>
+      <div class="dashboard-banner-chart-legend">
+        <div class="dashboard-banner-chart-legend-item">
+          <span class="dashboard-banner-chart-legend-label">
+            <%= gettext "Price" %>
+          </span>
+          <span class="dashboard-banner-chart-legend-value" data-selector="exchange-rate" data-wei-value="<%= Explorer.Chain.Wei.from(Decimal.new(1), :ether).value %>" data-usd-exchange-rate="<%= @exchange_rate.usd_value %>">
+          </span>
+        </div>
+        <div class="dashboard-banner-chart-legend-item">
+          <span class="dashboard-banner-chart-legend-label">
+            <%= gettext "Market Cap" %>
+          </span>
+          <span class="dashboard-banner-chart-legend-value" data-selector="market-cap" data-usd-value="<%= @exchange_rate.market_cap_usd %>">
+          </span>
+        </div>
+      </div>
+      <div class="dashboard-banner-network-stats">
+        <div class="dashboard-banner-network-stats-item">
+          <span class="dashboard-banner-network-stats-label">
+            <%= gettext "Average block time" %>
+          </span>
+          <span class="dashboard-banner-network-stats-value" data-selector="average-block-time">
+            <%= Timex.format_duration(@average_block_time, :humanized) %>
+          </span>
+        </div>
+        <div class="dashboard-banner-network-stats-item">
+          <span class="dashboard-banner-network-stats-label">
+            <%= gettext "Total transactions" %>
+          </span>
+          <span class="dashboard-banner-network-stats-value" data-selector="transaction-count">
+            <%= Cldr.Number.to_string!(@transaction_estimated_count, format: "#,###") %>
+          </span>
+        </div>
+        <div class="dashboard-banner-network-stats-item">
+          <span class="dashboard-banner-network-stats-label">
+            <%= gettext "Wallet addresses" %>
+          </span>
+          <span class="dashboard-banner-network-stats-value" data-selector="address-count">
+            <%= Cldr.Number.to_string!(@address_estimated_count, format: "#,###") %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="container">
+  <div class="card card-chain-blocks">
+    <div class="card-body">
+      <%= link(gettext("View All Blocks →"), to: block_path(BlockScoutWeb.Endpoint, :index), class: "button button-secondary button-xsmall float-right") %>
+      <h2 class="card-title"><%= gettext "Blocks" %></h2>
+      <div class="row" data-selector="chain-block-list">
+        <%= for block <- @blocks do %>
+          <%= render BlockScoutWeb.ChainView, "_block.html", block: block %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-chain-transactions">
+    <div class="card-body">
+      <div data-selector="channel-batching-message" style="display:none;">
+        <div data-selector="reload-button" class="alert alert-info">
+          <a href="#" class="alert-link"><span data-selector="channel-batching-count"></span> <%= gettext "More transactions have come in" %></a>
+        </div>
+      </div>
+      <%= link(gettext("View All Transactions →"), to: transaction_path(BlockScoutWeb.Endpoint, :index), class: "button button-secondary button-xsmall float-right") %>
+      <h2 class="card-title"><%= gettext "Transactions" %></h2>
+      <span data-selector="transactions-list">
+        <%= for transaction <- @transactions do %>
+          <%= render BlockScoutWeb.TransactionView, "_tile.html", transaction: transaction %>
+        <% end %>
+      </span>
+    </div>
+  </div>
+</section>
