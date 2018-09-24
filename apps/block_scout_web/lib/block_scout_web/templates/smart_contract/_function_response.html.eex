@@ -1,0 +1,20 @@
+<div class="tile tile-muted tile-function-response monospace">
+  <pre class="pre-wrap">
+    <code>
+      [ <%= @function_name %> method Response ]
+
+      <p class="text-dark">
+        [
+          <%= for item <- @outputs do %>
+            <span class="text-dark function-response-item">
+              <%= if named_argument?(item) do %>
+                <%= item["name"] %>
+              <% end %>
+              (<%= item["type"] %>) : <%= values(item["value"]) %>
+            </span>
+          <% end %>
+        ]
+      </p>
+    </code>
+  </pre>
+</div>
